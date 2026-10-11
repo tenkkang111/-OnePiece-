@@ -1,0 +1,9 @@
+strace: Process 2829 attached
+strace: Process 2830 attached
+[pid  2829] +++ exited with 0 +++
+strace: Process 2831 attached
+[pid  2830] +++ exited with 0 +++
+strace: Process 2832 attached
+[pid  2831] +++ exited with 0 +++
+[pid  2832] +++ exited with 0 +++
++++ exited with 0 +++

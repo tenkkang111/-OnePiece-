@@ -1,0 +1,7 @@
+strace: Process 3961 attached
+strace: Process 3962 attached
+strace: Process 3963 attached
+[pid  3963] +++ exited with 0 +++
+[pid  3962] +++ exited with 0 +++
+[pid  3961] +++ exited with 0 +++
++++ exited with 0 +++

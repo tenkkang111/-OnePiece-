@@ -1,0 +1,53 @@
+name: Autograding Tests
+'on':
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: self-hosted
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: test pipe
+      id: test-pipe
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test pipe
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab8-test.git
+          test
+        command: LAB_HOME=$(pwd) bash test/test.sh pipe
+        timeout: 10
+        max-score: 5
+    - name: test webserver
+      id: test-webserver
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test webserver
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab8-test.git
+          test
+        command: LAB_HOME=$(pwd) bash test/test.sh webserver
+        timeout: 10
+        max-score: 7
+    - name: test webserver-mt
+      id: test-webserver-mt
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test webserver-mt
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab8-test.git
+          test; rm -f baseline.py; ln -s test/baseline.py .
+        command: LAB_HOME=$(pwd) bash test/test.sh webserver-mt
+        timeout: 10
+        max-score: 8
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TEST-PIPE_RESULTS: "${{steps.test-pipe.outputs.result}}"
+        TEST-WEBSERVER_RESULTS: "${{steps.test-webserver.outputs.result}}"
+        TEST-WEBSERVER-MT_RESULTS: "${{steps.test-webserver-mt.outputs.result}}"
+      with:
+        runners: test-pipe,test-webserver,test-webserver-mt

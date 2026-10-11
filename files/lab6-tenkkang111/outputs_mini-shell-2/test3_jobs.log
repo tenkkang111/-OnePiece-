@@ -1,0 +1,13 @@
+[background pid 5583]
+[background pid 5584]
+[background pid 5585]
+[background pid 5586]
+[background pid 5587]
+
+[Stopped] pid 5588
+[1] Running 5583 sleep
+[2] Running 5584 sleep
+[3] Running 5585 sleep
+[4] Running 5586 sleep
+[5] Running 5587 sleep
+[6] Stopped 5588 sleep

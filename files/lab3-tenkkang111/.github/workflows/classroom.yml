@@ -1,0 +1,50 @@
+name: Autograding Tests
+'on':
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: self-hosted
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: test pw_input
+      id: test-pw_input
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test pw_input
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab3-test.git test
+        command: LAB_HOME=$(pwd) bash test/test.sh pw_input
+        timeout: 10
+        max-score: 2
+    - name: test broadcaster
+      id: test-broadcaster
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test broadcaster
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab3-test.git test
+        command: LAB_HOME=$(pwd) bash test/test.sh broadcaster
+        timeout: 10
+        max-score: 4
+    - name: test typer
+      id: test-typer
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test typer
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab3-test.git test
+        command: LAB_HOME=$(pwd) bash test/test.sh typer
+        timeout: 10
+        max-score: 4
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TEST-PW_INPUT_RESULTS: "${{steps.test-pw_input.outputs.result}}"
+        TEST-BROADCASTER_RESULTS: "${{steps.test-broadcaster.outputs.result}}"
+        TEST-TYPER_RESULTS: "${{steps.test-typer.outputs.result}}"
+      with:
+        runners: test-pw_input,test-broadcaster,test-typer

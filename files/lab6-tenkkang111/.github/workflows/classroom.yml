@@ -1,0 +1,53 @@
+name: Autograding Tests
+'on':
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: self-hosted
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: test mini-shell-1
+      id: test-mini-shell-1
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test mini-shell-1
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab6-test.git
+          test
+        command: LAB_HOME=$(pwd) bash test/test.sh mini-shell-1
+        timeout: 10
+        max-score: 4
+    - name: test mini-shell-2
+      id: test-mini-shell-2
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test mini-shell-2
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab6-test.git
+          test
+        command: LAB_HOME=$(pwd) bash test/test.sh mini-shell-2
+        timeout: 10
+        max-score: 5
+    - name: test mini-shell-3
+      id: test-mini-shell-3
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test mini-shell-3
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab6-test.git
+          test
+        command: LAB_HOME=$(pwd) bash test/test.sh mini-shell-3
+        timeout: 10
+        max-score: 6
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TEST-MINI-SHELL-1_RESULTS: "${{steps.test-mini-shell-1.outputs.result}}"
+        TEST-MINI-SHELL-2_RESULTS: "${{steps.test-mini-shell-2.outputs.result}}"
+        TEST-MINI-SHELL-3_RESULTS: "${{steps.test-mini-shell-3.outputs.result}}"
+      with:
+        runners: test-mini-shell-1,test-mini-shell-2,test-mini-shell-3

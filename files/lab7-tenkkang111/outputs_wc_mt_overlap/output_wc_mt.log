@@ -1,0 +1,7 @@
+Total words: 63159879
+Elapsed time (total): 783.51 ms
+  I/O time:           357.51 ms
+  Word count time:    358.69 ms
+real 0.78
+user 0.69
+sys 0.40

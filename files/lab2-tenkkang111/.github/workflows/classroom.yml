@@ -1,0 +1,42 @@
+name: Autograding Tests
+'on':
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: test ls3
+      id: test-ls3
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test ls3
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab2-test.git
+          test
+        command: cd test; ln -s ../ls3.c .; bash test_ls3.sh
+        timeout: 10
+        max-score: 4
+    - name: test cpdr
+      id: test-cpdr
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test cpdr
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab2-test.git
+          test
+        command: cd test; ln -s ../cpdr.c .; bash test_cpdr.sh
+        timeout: 10
+        max-score: 6
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TEST-LS3_RESULTS: "${{steps.test-ls3.outputs.result}}"
+        TEST-CPDR_RESULTS: "${{steps.test-cpdr.outputs.result}}"
+      with:
+        runners: test-ls3,test-cpdr

@@ -1,0 +1,7 @@
+Before: my pid is 1891
+Child 1892 here. Will sleep for 5 seconds.
+Child done. About to exit.
+Before: my pid is 1891
+Done waiting for 1892. wait() returned: 1892
+Child status (binary): 00010001 00000000 
+Status: exit=17, signal=0, core dumped=0

@@ -1,0 +1,53 @@
+name: Autograding Tests
+'on':
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: self-hosted
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: test command
+      id: test-command
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test command
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab1-test.git
+          test
+        command: LAB_HOME=$(pwd) bash test/test.sh command
+        timeout: 10
+        max-score: 3
+    - name: test who3
+      id: test-who3
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test who3
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab1-test.git
+          test
+        command: LAB_HOME=$(pwd) bash test/test.sh who3
+        timeout: 10
+        max-score: 3
+    - name: test cp2
+      id: test-cp2
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: test cp2
+        setup-command: git pull; rm -rf test; git clone https://github.com/KNU-ELEC462/lab1-test.git
+          test
+        command: LAB_HOME=$(pwd) bash test/test.sh cp2
+        timeout: 10
+        max-score: 4
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TEST-COMMAND_RESULTS: "${{steps.test-command.outputs.result}}"
+        TEST-WHO3_RESULTS: "${{steps.test-who3.outputs.result}}"
+        TEST-CP2_RESULTS: "${{steps.test-cp2.outputs.result}}"
+      with:
+        runners: test-command,test-who3,test-cp2
